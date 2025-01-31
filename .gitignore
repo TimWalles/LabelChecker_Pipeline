@@ -1,0 +1,19 @@
+**/data/*
+__pycache__
+/.vscode/
+**/*.h5
+**/*.joblib
+**/*.json
+**/*/*.png
+**/*/*.csv
+examples/01_train_model_with_lc_data/train_model_ks.ipynb
+**/models/*
+**/predict/*
+*.png
+*.ipynb
+# Allow .gitkeep files
+!**/.gitkeep
+!train_model.ipynb
+!analyze_model.ipynb
+*.lock
+/model
