@@ -13,7 +13,7 @@ To run the data processing pipeline scripts, follow these steps to set up your e
 
 1. Clone the repository:
     ```bash
-      git clone https://github.com/your-username/labelchecker_data_pipeline.git
+      git clone https://github.com/TimWalles/LabelChecker
       ```
     Or download and upzip the folder.
 
@@ -158,11 +158,11 @@ In addition, LabelChecker provides support for the validation and correction of 
 
 ## Download
 
-You can download your version of LabelChecker from the [LabelChecker release folder](https://nimbus.igb-berlin.de/index.php/s/o4XEtc9rN5moapo).
+You can download your version of LabelChecker from the [LabelChecker release folder](https://github.com/TimWalles/LabelChecker/releases).
 
 ## Support, Comments, and Requests
 
-Join our [LabelChecker Discord server](https://discord.gg/WSARG2gcZp) to connect with other users and developers. Here, you can also make feature requests or report errors.
+Join our [LabelChecker Discord server](https://discord.gg/tGBg7z2hSU) to connect with other users and developers. Here, you can also make feature requests or report errors.
 
 ## Commitment
 The Data processing pipeline and LabelChecker program are available free of charge and compatible with all major operating systems. All data processing occurs locally, ensuring that there is no transfer of ownership of the complete dataset or any of its components from the user.
