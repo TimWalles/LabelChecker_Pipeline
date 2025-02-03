@@ -166,5 +166,3 @@ Join our [LabelChecker Discord server](https://discord.gg/tGBg7z2hSU) to connect
 
 ## Commitment
 The Data processing pipeline and LabelChecker program are available free of charge and compatible with all major operating systems. All data processing occurs locally, ensuring that there is no transfer of ownership of the complete dataset or any of its components from the user.
-
-# Licence
