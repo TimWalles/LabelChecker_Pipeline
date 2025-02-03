@@ -1,6 +1,6 @@
 ![Python](https://img.shields.io/badge/python-3.12-blue.svg)
 ![Scikit-learn](https://img.shields.io/badge/scikit--learn-latest-orange.svg)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 # LabelChecker data processing pipeline
 ## Installation and Setup
