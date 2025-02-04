@@ -4,7 +4,7 @@ from typing import Tuple
 
 import pandas as pd
 
-from ..models.flowcam_data_model import flowcam_data_model
+from ..structure.flowcam_data_structure import flocam_data_structure
 
 
 def normalize_flowcam_data(
@@ -105,7 +105,7 @@ def normalize_column_name(name: str) -> str:
 
 
 def check_columns(df: pd.DataFrame) -> list:
-    return [name for name in flowcam_data_model.keys() if name not in df.columns]
+    return [name for name in flocam_data_structure.keys() if name not in df.columns]
 
 
 def add_missing_columns(
@@ -174,11 +174,7 @@ def _assign_filename(
             (
                 f"{sample_name}_{str(row['Id']-1).zfill(5)}.png"
                 if pd.isnull(row["ImageFilename"]) and pd.isnull(row["CollageFile"])
-                else (
-                    row["ImageFilename"]
-                    if not pd.isnull(row["ImageFilename"])
-                    else None
-                )
+                else (row["ImageFilename"] if not pd.isnull(row["ImageFilename"]) else None)
             )
         ]
     )
