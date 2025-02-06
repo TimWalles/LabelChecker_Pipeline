@@ -25,9 +25,13 @@ To run the data processing pipeline scripts, follow these steps to set up your e
 3. Choose your preferred installation method:
 
    ### Option A: Using pip (Traditional Method)
+   * Create virtual environment
    ```bash
-   python3 -m venv env
+   python3 -m venv env # Replace env with the name you want
    source env/bin/activate  # On Windows use: .\env\Scripts\activate
+   ```
+   * Install dependencies
+   ```bash
    pip install -r requirements.txt
    ```
 
