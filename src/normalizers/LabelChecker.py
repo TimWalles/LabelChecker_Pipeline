@@ -1,11 +1,9 @@
 import uuid
 
 import pandas as pd
-import pyarrow as pa
 
 from src.schemas.LabelChecker import LabelCheckerData
-
-from .models.LabelCheckerColumns import column_name_types
+from src.schemas.LabelCheckerColumns import column_name_types
 
 
 class LabelCheckerNormalizer:

@@ -39,9 +39,6 @@ class PreprocessingConfig(BaseModel):
         "Width",
     ]
 
-    # Detritus detection
-    detritus_detection_active: bool = True
-
     # Air bubble detection
     air_bubble_detection_active: bool = True
 
