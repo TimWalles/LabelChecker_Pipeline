@@ -1,11 +1,11 @@
-![Python](https://img.shields.io/badge/python-3.12-blue.svg)
+![Python](https://img.shields.io/badge/python-3.11-blue.svg)
 ![Scikit-learn](https://img.shields.io/badge/scikit--learn-latest-orange.svg)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 # LabelChecker data processing pipeline
 ## Installation and Setup
 
-For the scripts to run seamlessly, download Python 3.12 (if you don't have Python already installed). Go to https://www.python.org/downloads/release/python-3123/ and download the installer you need.
+For the scripts to run seamlessly, download Python 3.11 (if you don't have Python already installed). Go to https://www.python.org/downloads/release/python-3123/ and download the installer you need.
 
 > Tensorflow is [CPU only](https://www.tensorflow.org/install/pip#windows-wsl2:~:text=Note%3A%20TensorFlow%20with%20GPU%20access%20is%20supported%20for%20WSL2%20on%20Windows%2010%2019044%20or%20higher.%20This%20corresponds%20to%20Windows%2010%20version%2021H2%2C%20the%20November%202021%20update.%20You%20can%20get%20the%20latest%20update%20from%20here%3A%20Download%20Windows%2010.%20For%20instructions%2C%20see%20Install%20WSL2%20and%20NVIDIA%E2%80%99s%20setup%20docs%20for%20CUDA%20in%20WSL.) supported on windows. [Windows Users](#windows-users) that want to utilize their GPU need to install WSL. For CPU-only users WSL is optional, but we recommend using WSL on Windows systems.
 
