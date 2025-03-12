@@ -142,11 +142,7 @@ def _preprocess_data(
     df = df.dropna(axis=1, how="any")  # Tensorflow throws an error if there are columns with missing values
 
     # Convert columns to float if possible
-    for column in df.columns:
-        try:
-            df[column] = df[column].astype(float)
-        except ValueError:
-            pass
+    df = df.astype(float, errors="ignore")
     return df
 
 
