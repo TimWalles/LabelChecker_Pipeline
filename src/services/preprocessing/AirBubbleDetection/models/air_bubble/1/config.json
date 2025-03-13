@@ -1,0 +1,20 @@
+{
+    "Name": "bubble",
+    "Version": "1",
+    "Framework": "TensorFlow",
+    "Class_names": [
+        "bubble",
+        "object"
+    ],
+    "Input_shape": [
+        32,
+        32,
+        3
+    ],
+    "Features": [
+        "AbdArea",
+        "AbdDiameter",
+        "Length",
+        "Width"
+    ]
+}
