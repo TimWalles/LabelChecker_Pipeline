@@ -13,7 +13,7 @@ To run the data processing pipeline scripts, follow these steps to set up your e
 
 1. Clone the repository:
     ```bash
-      git clone https://github.com/TimWalles/LabelChecker
+      git clone https://github.com/TimWalles/LabelChecker_Pipeline
       ```
     Or download and upzip the folder.
 
