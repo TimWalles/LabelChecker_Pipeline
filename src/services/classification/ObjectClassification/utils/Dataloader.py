@@ -40,31 +40,31 @@ class Dataloader:
         return self.resize_image(image)
 
     def decode_image(self, row: pd.Series):
-        if "ImageFilename" in row:
-            image_string = tf.io.read_file(row["ImageFilename"])
-            image = tf.io.decode_png(image_string, channels=3)
-            return image
-        else:
-            try:
-                image_path = tf.strings.regex_replace(row["CollageFile"], r"\\", "/")
-
-                def read_tiff(path_tensor: tf.Tensor):
-                    # path_tensor is already bytes, just decode it
-                    path = path_tensor.decode("utf-8")
-                    img = cv2.imread(path, cv2.IMREAD_COLOR)
-                    if img is None:
-                        raise ValueError(f"Image not found at path: {path}")
-                    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-                    return img.astype(np.uint8)
-
-                image = tf.numpy_function(read_tiff, [image_path], tf.uint8)
+        try:
+            if "ImageFilename" in row:
+                image_string = tf.io.read_file(row["ImageFilename"])
+                image = tf.io.decode_png(image_string, channels=3)
+                return image
+            else:
+                image_path = tf.strings.as_string(row["CollageFile"])
+                image = tf.numpy_function(self.read_tiff, [image_path], tf.uint8)
                 image.set_shape([None, None, 3])
+                image = self.remove_alpha_channel(image)
                 image = self.crop_image(row, image)
                 return image
+        except Exception as e:
+            log_error(f"Error decoding image: {str(e)}")
+            raise e
 
-            except Exception as e:
-                log_error(f"Error decoding image: {str(e)}")
-                raise e
+    @staticmethod
+    def read_tiff(path_tensor: tf.Tensor):
+        # path_tensor is already bytes, just decode it
+        path = path_tensor.decode("utf-8")
+        img = cv2.imread(path, cv2.IMREAD_COLOR)
+        if img is None:
+            raise ValueError(f"Image not found at path: {path}")
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        return img.astype(np.uint8)
 
     def remove_alpha_channel(self, image):
         return tf.convert_to_tensor(image[:, :, : self.model_config.Input_shape[2]])  # remove alpha channel
