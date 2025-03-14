@@ -141,11 +141,8 @@ def _preprocess_data(data: list[LabelCheckerData], directory: Path) -> pd.DataFr
     # drop columns with missing values
     df = df.dropna(axis=1, how="any")
     # Convert columns to float if possible
-    for column in df.columns:
-        try:
-            df[column] = df[column].astype(float)
-        except ValueError:
-            pass
+    df = df.astype(float, errors="ignore")
+
     return df
 
 

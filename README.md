@@ -1,19 +1,19 @@
-![Python](https://img.shields.io/badge/python-3.11-blue.svg)
+![Python](https://img.shields.io/badge/python-3.12-blue.svg)
 ![Scikit-learn](https://img.shields.io/badge/scikit--learn-latest-orange.svg)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 # LabelChecker data processing pipeline
 ## Installation and Setup
 
-For the scripts to run seamlessly, download Python 3.11 (if you don't have Python already installed). Go to https://www.python.org/downloads/release/python-3123/ and download the installer you need.
+For the scripts to run seamlessly, download Python 3.12 (if you don't have Python already installed). Go to https://www.python.org/downloads/release/python-3123/ and download the installer you need.
 
-> Tensorflow is [CPU only](https://www.tensorflow.org/install/pip#windows-wsl2:~:text=Note%3A%20TensorFlow%20with%20GPU%20access%20is%20supported%20for%20WSL2%20on%20Windows%2010%2019044%20or%20higher.%20This%20corresponds%20to%20Windows%2010%20version%2021H2%2C%20the%20November%202021%20update.%20You%20can%20get%20the%20latest%20update%20from%20here%3A%20Download%20Windows%2010.%20For%20instructions%2C%20see%20Install%20WSL2%20and%20NVIDIA%E2%80%99s%20setup%20docs%20for%20CUDA%20in%20WSL.) supported on windows. [Windows Users](#windows-users) that want to utilize their GPU need to install WSL. For CPU-only users WSL is optional, but we recommend using WSL on Windows systems.
+> We **strongly recomend** [Windows Users](#windows-users) to set up and use a Windows Subsystem for Linux (WSL) to run the pipeline scripts with the possibility of GPU utilization (if there). This is because Tensorflow is [CPU only](https://www.tensorflow.org/install/pip#windows-wsl2:~:text=Note%3A%20TensorFlow%20with%20GPU%20access%20is%20supported%20for%20WSL2%20on%20Windows%2010%2019044%20or%20higher.%20This%20corresponds%20to%20Windows%2010%20version%2021H2%2C%20the%20November%202021%20update.%20You%20can%20get%20the%20latest%20update%20from%20here%3A%20Download%20Windows%2010.%20For%20instructions%2C%20see%20Install%20WSL2%20and%20NVIDIA%E2%80%99s%20setup%20docs%20for%20CUDA%20in%20WSL.) supported on Windows, additionally to other known limitations of the OS when it comes to machine learning workflows.
 
 To run the data processing pipeline scripts, follow these steps to set up your environment:
 
 1. Clone the repository:
     ```bash
-      git clone https://github.com/TimWalles/LabelChecker
+      git clone https://github.com/TimWalles/LabelChecker_Pipeline
       ```
     Or download and upzip the folder.
 
@@ -27,8 +27,9 @@ To run the data processing pipeline scripts, follow these steps to set up your e
    ### Option A: Using pip (Traditional Method)
    * Create virtual environment
    ```bash
-   python3 -m venv env # Replace env with the name you want
-   source env/bin/activate  # On Windows use: .\env\Scripts\activate
+   
+   python3 -m venv your-env # On Windows use: python -m venv your-env
+   source your-env/bin/activate  # On Windows use: .\your-env\Scripts\activate
    ```
    * Install dependencies
    ```bash
@@ -51,9 +52,11 @@ To run the data processing pipeline scripts, follow these steps to set up your e
    ```
 
 
-### Windows Users (optional)
+### Windows Users (optional) 
+<a name="windows-users"></a>
 
-It is recommended to use Windows Subsystem for Linux (WSL) for a more consistent development environment. Follow these steps to set up WSL or the steps in the [official documentation](https://learn.microsoft.com/en-gb/windows/wsl/install) of Microsoft:
+
+It is recommended to use WSL for a more consistent development environment. Follow these steps to set up WSL or the steps in the [official documentation](https://learn.microsoft.com/en-gb/windows/wsl/install) of Microsoft:
 
 1. Install WSL if you haven't already:
     ```bash
@@ -72,10 +75,10 @@ It is recommended to use Windows Subsystem for Linux (WSL) for a more consistent
 
 4. Create a virtual environment:
     ```bash
-    python3 -m venv env
-    source env/bin/activate
+    python3 -m venv your-env
+    source your-env/bin/activate
     ```
-    Replace `env` with the name of your choice.
+    Replace `your-env` with the name of your choice.
 
 5. Install dependencies:
     ```bash
@@ -94,7 +97,7 @@ The data processing pipeline, implemented in Python, consists of two scripts: `p
 ### Run the scripts
 - Activate your virtual enviroment:
  ```bash
-  workon env
+  workon your-env
   ```
   Navigate to the project directory:
   ```bash
@@ -103,18 +106,19 @@ The data processing pipeline, implemented in Python, consists of two scripts: `p
 - To preprocess Flowcam data:
   ```bash
   python preprocessing.py \
-    -D path/to/flowcam_data \
-    -V \ # to print detailed steps instead of only the progress bar
+    -D # path/to/flowcam_data \
+    -V  # to print detailed steps instead of only the progress bar
     -R # for reprocessing already processed data
   ```
 - To classify the preprocessed data:
   ```bash
   python classification.py
-    -D path/to/flowcam/data \
+    -D # path/to/flowcam/data \
     -V  # to print detailed steps instead of only the progress bar
   ```
   Once the script starts running it will list the available classification models. 
   You can select the model of your choice by typing the respective number.
+  > There is currently no model stored in the pipeline folders. To use the classification script, you either have to train your own model or download the [example model](https://zenodo.org/records/14832978?token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjRlMDMzZjNjLWJiZjEtNDU5Ny1hMzg5LWU5YmVhNWE2ZWVlMSIsImRhdGEiOnt9LCJyYW5kb20iOiJlMTY1ZDY3YmM1MzczYjI2ZWNjM2U1ZDdjMTJkZGM3MCJ9.cPqqaE1W4R7bWV24aWB62_daU3geZsNuM1v6MlunI5WflnCYtay5BCK4lRHFHkUmkd5rZy15CJ7bwzeABLUGQA).
   
 For more information on the input flags, you can use the following commands:
 To get help for the `preprocessing.py` script, run:
@@ -162,11 +166,11 @@ In addition, LabelChecker provides support for the validation and correction of 
 
 ## Download
 
-You can download your version of LabelChecker from the [LabelChecker release folder](https://github.com/TimWalles/LabelChecker/releases).
+You can download  LabelChecker from the [LabelChecker release folder](https://github.com/TimWalles/LabelChecker/releases/latest).
 
 ## Support, Comments, and Requests
 
-Join our [LabelChecker Discord server](https://discord.gg/tGBg7z2hSU) to connect with other users and developers. Here, you can also make feature requests or report errors.
+Join our [LabelChecker Discord server](https://discord.gg/tGBg7z2hSU) to make feature requests or report errors. Here, you can also connect with other users and developers.
 
 ## Commitment
 The Data processing pipeline and LabelChecker program are available free of charge and compatible with all major operating systems. All data processing occurs locally, ensuring that there is no transfer of ownership of the complete dataset or any of its components from the user.
