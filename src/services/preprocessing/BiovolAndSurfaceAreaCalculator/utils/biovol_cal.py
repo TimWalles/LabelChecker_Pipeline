@@ -1,3 +1,9 @@
+from src.services.config import Config
+
+config = Config.preprocessing
+bead_size = config.bead_size
+bead_equiv_diameter = config.bead_equiv_diameter
+
 import numpy as np
 from PIL import Image
 import cv2
@@ -14,15 +20,6 @@ from skimage import measure
 from skimage import filters
 from skimage.morphology import skeletonize
 from skimage.transform import rotate
-
-
-'''
-Parameters
-bead_size = The real bead diameter in micrometer
-bead_equiv_diameter = The equivalent diameter of the bead in pixels
-'''
-bead_size = 50
-bead_equiv_diameter = 30.25
 
 
 def view_LC_by_ID(input_path, ID):
