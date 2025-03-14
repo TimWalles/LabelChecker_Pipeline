@@ -42,6 +42,7 @@ class PreprocessingConfig(BaseModel):
     # Air bubble detection
     air_bubble_detection_active: bool = True
 
+    biovol_and_surface_area_calculator_active: bool = True
 
 class ClassificationConfig(BaseModel):
     # Object classification
