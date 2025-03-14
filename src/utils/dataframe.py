@@ -82,6 +82,8 @@ def order_df_columns(df: pd.DataFrame) -> pd.DataFrame:
             "Symmetry",
             "Transparency",
             "Width",
+            "BiovolumeHSosik",
+            "SurfaceAreaHSosik",
             "Preprocessing",
             "PreprocessingTrue",
             "LabelPredicted",

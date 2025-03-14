@@ -8,7 +8,7 @@ from .classification.ObjectClassification.service import ObjectClassification
 from .preprocessing.AirBubbleDetection.service import AirBubbleDetection
 from .preprocessing.DuplicateDetection.service import DuplicateDetection
 from .preprocessing.SizeThreshold.service import SizeThreshold
-
+from .preprocessing.BiovolAndSurfaceAreaCalculator.service import BiovolAndSurfaceAreaCalculator
 
 class DataPreprocessor:
     # Initialize services that require models and prevent re-loading of same model each time
@@ -38,6 +38,13 @@ class DataPreprocessor:
 
         data, service_settings = DuplicateDetection.process_data(
             data=data,
+            verbose=verbose,
+            service_settings=service_settings,
+        )
+
+        data, service_settings = BiovolAndSurfaceAreaCalculator.process_data(
+            data=data,
+            data_directory=data_directory,
             verbose=verbose,
             service_settings=service_settings,
         )

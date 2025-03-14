@@ -1,4 +1,8 @@
 import os
+
+# This supresses the warning message about the tensorflow
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+
 from pathlib import Path
 
 import pandas as pd

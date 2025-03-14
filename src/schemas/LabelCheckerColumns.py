@@ -75,6 +75,8 @@ column_name_types = {
     "AbdVolume": pd.ArrowDtype(pa.float32()),
     "EsdVolume": pd.ArrowDtype(pa.float32()),
     "Width": pd.ArrowDtype(pa.float32()),
+    "BiovolumeHSosik": pd.ArrowDtype(pa.float32()),
+    "SurfaceAreaHSosik": pd.ArrowDtype(pa.float32()),
     "Preprocessing": pd.ArrowDtype(pa.string()),
     "PreprocessingTrue": pd.ArrowDtype(pa.string()),
     "ProbabilityScore": pd.ArrowDtype(pa.float32()),
