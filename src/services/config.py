@@ -12,13 +12,13 @@ class Metric(StrEnum):
 
 class PreprocessingConfig(BaseModel):
     # Size threshold
-    size_threshold_active: bool = True
+    size_threshold_active: bool = False
     size_threshold_threshold_variable: str = "AbdDiameter"
-    size_threshold_lower_bound: float = 30
+    size_threshold_lower_bound: float = 100
     size_threshold_upper_bound: float = float("inf")
 
     # Duplicate detection
-    duplicate_detection_active: bool = True
+    duplicate_detection_active: bool = False
     duplicate_detection_max_source_distance: int = 5
     duplicate_detection_x_coordinate_offset: int = 100
     duplicate_detection_overlap_threshold: float = 0.3
@@ -40,7 +40,7 @@ class PreprocessingConfig(BaseModel):
     ]
 
     # Air bubble detection
-    air_bubble_detection_active: bool = True
+    air_bubble_detection_active: bool = False
 
     # Biovolume and surface area calculator
     biovol_and_surface_area_calculator_active: bool = True
@@ -54,7 +54,7 @@ class PreprocessingConfig(BaseModel):
 
 class ClassificationConfig(BaseModel):
     # Object classification
-    object_classification_active: bool = True
+    object_classification_active: bool = False
 
 
 class Config:

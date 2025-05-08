@@ -8,7 +8,7 @@ from src.schemas.LabelChecker import LabelCheckerData
 from src.services.config import Config
 from src.utils.ServiceSettings import ServiceSettings, subset_settings
 
-from .utils.biovol_cal import biovolume, get_nparray_from_tiff
+from .utils.biovol_cal import biovolume, get_nparray_from_tiff, get_nparray_from_png
 
 class BiovolAndSurfaceAreaCalculator:
     config = Config.preprocessing
@@ -46,15 +46,28 @@ class BiovolAndSurfaceAreaCalculator:
 
 
 def bcal_function(lc_data: LabelCheckerData, data_directory) -> LabelCheckerData:
-    x = lc_data.get_value("ImageX")
-    y = lc_data.get_value("ImageY") 
-    w = lc_data.get_value("ImageW")
-    h = lc_data.get_value("ImageH")
-    CollageFile_name = lc_data.get_value("CollageFile")
-    sorce_dir = data_directory
-    CollageFile_path = os.path.join(sorce_dir, CollageFile_name)
 
-    image = get_nparray_from_tiff(CollageFile_path, x, y, w, h)
+    CollageFile_name = lc_data.get_value("CollageFile")
+
+    if CollageFile_name:
+        x = lc_data.get_value("ImageX")
+        y = lc_data.get_value("ImageY") 
+        w = lc_data.get_value("ImageW")
+        h = lc_data.get_value("ImageH")
+        CollageFile_name = lc_data.get_value("CollageFile")
+
+        CollageFile_path = os.path.join(data_directory, CollageFile_name)
+
+        image = get_nparray_from_tiff(CollageFile_path, x, y, w, h)
+
+    else:
+        ImageFilename = lc_data.get_value("ImageFilename")
+        Sample_name = lc_data.get_value("Name")
+        
+        ImageFile_path = os.path.join(data_directory, Sample_name, ImageFilename)
+
+        image = get_nparray_from_png(ImageFile_path)
+
     _, lc_data.BiovolumeHSosik, lc_data.SurfaceAreaHSosik = biovolume(image)
 
     return lc_data

@@ -73,6 +73,32 @@ def get_nparray_from_tiff(input_path, x, y, width, height):
     except Exception as e:
         print(f"Error processing image: {str(e)}")
 
+def get_nparray_from_png(input_path):
+    """
+    Extract a region of interest from a TIFF image and return it as a numpy array.
+    
+    Args:
+        input_path (str): Path to input TIFF image
+        x (int): X coordinate of top-left corner
+        y (int): Y coordinate of top-left corner
+        width (int): Width of the region to extract
+        height (int): Height of the region to extract
+    """
+    
+    try:
+        # Open the TIFF image
+        with Image.open(input_path) as img:
+            
+            # Crop the image
+            img = img.convert('L')
+            img = np.array(img)
+            
+            # Return nparray
+            return img
+        
+    except Exception as e:
+        print(f"Error processing image: {str(e)}")
+
 def detect_edges(image, method='canny', low_threshold=50, high_threshold=150):
     """
     Detect edges in an RGB image using various methods.
@@ -722,4 +748,4 @@ def biovolume(image, debug = False): # Assumed grayscale image
         # Display the figure
         plt.show()
 
-    return result_mask, biovol_result, surface_area_result
+    return result_mask, round(biovol_result,2), round(surface_area_result,2)
