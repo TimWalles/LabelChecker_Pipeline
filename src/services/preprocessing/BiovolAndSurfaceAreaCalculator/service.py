@@ -48,14 +48,15 @@ class BiovolAndSurfaceAreaCalculator:
 def bcal_function(lc_data: LabelCheckerData, data_directory) -> LabelCheckerData:
 
     CollageFile_name = lc_data.get_value("CollageFile")
+    calibration_const = lc_data.get_value("CalConst")
 
     if CollageFile_name:
         x = lc_data.get_value("ImageX")
         y = lc_data.get_value("ImageY") 
         w = lc_data.get_value("ImageW")
         h = lc_data.get_value("ImageH")
+        
         CollageFile_name = lc_data.get_value("CollageFile")
-
         CollageFile_path = os.path.join(data_directory, CollageFile_name)
 
         image = get_nparray_from_tiff(CollageFile_path, x, y, w, h)
@@ -68,6 +69,6 @@ def bcal_function(lc_data: LabelCheckerData, data_directory) -> LabelCheckerData
 
         image = get_nparray_from_png(ImageFile_path)
 
-    _, lc_data.BiovolumeHSosik, lc_data.SurfaceAreaHSosik = biovolume(image)
+    _, lc_data.BiovolumeHSosik, lc_data.SurfaceAreaHSosik = biovolume(image, calibration_const)
 
     return lc_data

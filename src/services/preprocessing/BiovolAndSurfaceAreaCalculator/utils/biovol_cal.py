@@ -1,26 +1,15 @@
-from src.services.config import Config
-
-config = Config.preprocessing
-bead_size = config.bead_size
-bead_equiv_diameter = config.bead_equiv_diameter
-
 import numpy as np
 from PIL import Image
 import cv2
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
-
 from numpy.linalg import eig
-
 from scipy import ndimage
 from scipy.spatial import ConvexHull
-
 from skimage import measure
-from skimage import filters
 from skimage.morphology import skeletonize
 from skimage.transform import rotate
-
 
 def view_LC_by_ID(input_path, ID):
     """
@@ -638,11 +627,8 @@ def distmap_volume_surface_area(B, perimeter_image=None):
     # return volume, representative transect, and surface area
     return volume, x, sa, distmap_img
 
-def pixel_to_micrometer_volumn(pixel_volumn, calibrate_bead_size = bead_size, bead_equiv_diameter = bead_equiv_diameter): # Parameters calculated separately
-    lenght_per_pixel_ratio = calibrate_bead_size / bead_equiv_diameter
-    pixel_cube_unit = lenght_per_pixel_ratio ** 3
-    return pixel_volumn*pixel_cube_unit
-
+def pixel_to_micrometer_volumn(pixel_volumn, calibration_const=2.74): # Parameters calculated separately
+    return pixel_volumn*calibration_const
 
 def preprocessing(image):
     removeBG_image, edge_algorithm_used = remove_background(image)
@@ -650,7 +636,7 @@ def preprocessing(image):
 
     return clean_binary_image, edge_algorithm_used
 
-def biovolume(image, debug = False): # Assumed grayscale image
+def biovolume(image, calibration_const=2.74, debug = False): # Assumed grayscale image
     # Remove background
     
     clean_binary_image, edge_algorithm_used = preprocessing(image)
@@ -690,27 +676,27 @@ def biovolume(image, debug = False): # Assumed grayscale image
             if area_ratio < 1.2 or (eccentricity < 0.8 and p > 0.8):
 
                 sor = sor_volume_surface_area(rotated_image)
-                biovol_result = biovol_result + pixel_to_micrometer_volumn(sor[0])
-                surface_area_result = surface_area_result + pixel_to_micrometer_volumn(sor[2])
+                biovol_result = biovol_result + pixel_to_micrometer_volumn(sor[0], calibration_const)
+                surface_area_result = surface_area_result + pixel_to_micrometer_volumn(sor[2], calibration_const)
 
                 vol_to_2d_area_ratio = int(sor[0]/area)
                 result_mask = np.maximum(result_mask, blob_mask*vol_to_2d_area_ratio)
 
                 # log for debug
                 formular_used.append('Sor')
-                biovol_each_blob.append(pixel_to_micrometer_volumn(sor[0]))
+                biovol_each_blob.append(pixel_to_micrometer_volumn(sor[0], calibration_const))
 
             else:
                 perimeter_image_var = perimeter_image(blob_mask)
                 distmap_result = distmap_volume_surface_area(blob_mask, perimeter_image_var)
-                biovol_result = biovol_result + pixel_to_micrometer_volumn(distmap_result[0])
-                surface_area_result = surface_area_result + pixel_to_micrometer_volumn(distmap_result[2])
+                biovol_result = biovol_result + pixel_to_micrometer_volumn(distmap_result[0], calibration_const)
+                surface_area_result = surface_area_result + pixel_to_micrometer_volumn(distmap_result[2], calibration_const)
 
                 result_mask = np.maximum(result_mask, distmap_result[3])
 
                 # log for debug
                 formular_used.append('Distmap')
-                biovol_each_blob.append(pixel_to_micrometer_volumn(distmap_result[0]))
+                biovol_each_blob.append(pixel_to_micrometer_volumn(distmap_result[0], calibration_const))
 
         except Exception as e:
             #print(f"Error processing some blob: {str(e)}")

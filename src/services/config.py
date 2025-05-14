@@ -44,18 +44,10 @@ class PreprocessingConfig(BaseModel):
 
     # Biovolume and surface area calculator
     biovol_and_surface_area_calculator_active: bool = True
-    '''
-    Parameters
-    bead_size = The real bead diameter in micrometer
-    bead_equiv_diameter = The equivalent diameter of the bead in pixels, calculated from the bead image
-    '''
-    bead_size: float = 50
-    bead_equiv_diameter: float = 30.25
 
 class ClassificationConfig(BaseModel):
     # Object classification
     object_classification_active: bool = False
-
 
 class Config:
     preprocessing: PreprocessingConfig = PreprocessingConfig()
