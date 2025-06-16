@@ -12,7 +12,7 @@ class Metric(StrEnum):
 
 class PreprocessingConfig(BaseModel):
     # Size threshold
-    size_threshold_active: bool = False
+    size_threshold_active: bool = True
     size_threshold_threshold_variable: str = "AbdDiameter"
     size_threshold_lower_bound: float = 100
     size_threshold_upper_bound: float = float("inf")
@@ -44,6 +44,9 @@ class PreprocessingConfig(BaseModel):
 
     # Biovolume and surface area calculator
     biovol_and_surface_area_calculator_active: bool = True
+    area_raio_threshold: float = 1.2
+    eccentricity_threshold: float = 0.5 
+    p_threshold: float = 0.8
 
 class ClassificationConfig(BaseModel):
     # Object classification

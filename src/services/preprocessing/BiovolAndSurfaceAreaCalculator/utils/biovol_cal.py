@@ -11,6 +11,8 @@ from skimage import measure
 from skimage.morphology import skeletonize
 from skimage.transform import rotate
 
+# np.seterr(all='ignore')
+
 def view_LC_by_ID(input_path, ID):
     """
     Get x y width height and the path to TIFF image of the image in LabelChecker*.csv file from ID.
@@ -460,7 +462,7 @@ def ellipse_properties(B):
     # eigenvector
 
     x, y = eVec[:, np.argmax(L)]
-    orientation = (180 / np.pi) * np.arctan(y / x) - 90
+    orientation = (180 / np.pi) * np.arctan2(y, x) - 90
 
     # eccentricity = 1st eccentricity
     ecc = np.sqrt(1 - (min_axis / maj_axis) ** 2)
@@ -636,7 +638,7 @@ def preprocessing(image):
 
     return clean_binary_image, edge_algorithm_used
 
-def biovolume(image, calibration_const=2.74, debug = False): # Assumed grayscale image
+def biovolume(image, area_raio_threshold = 1.2, eccentricity_threshold = 0.5, p_threshold = 0.8,calibration_const=2.74, debug = False): # Assumed grayscale image
     # Remove background
     
     clean_binary_image, edge_algorithm_used = preprocessing(image)
@@ -673,7 +675,7 @@ def biovolume(image, calibration_const=2.74, debug = False): # Assumed grayscale
             orientation = (180 / np.pi) * measure.regionprops(blob_mask.astype(np.uint8))[0].orientation
             rotated_image =  rotate_blob(blob_mask, orientation)
 
-            if area_ratio < 1.2 or (eccentricity < 0.8 and p > 0.8):
+            if area_ratio < area_raio_threshold or (eccentricity < eccentricity_threshold and p > p_threshold):
 
                 sor = sor_volume_surface_area(rotated_image)
                 biovol_result = biovol_result + pixel_to_micrometer_volumn(sor[0], calibration_const)

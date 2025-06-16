@@ -12,7 +12,6 @@ from .utils.biovol_cal import biovolume, get_nparray_from_tiff, get_nparray_from
 
 class BiovolAndSurfaceAreaCalculator:
     config = Config.preprocessing
-
     @classmethod
     def process_data(
         cls,
@@ -31,22 +30,28 @@ class BiovolAndSurfaceAreaCalculator:
             return (data, service_settings)
 
         log_info(
-            message=f"""Running [bold magenta]biovol and surface area calculator[/bold magenta]""",
+            message=f"""Running [bold magenta]biovol and surface area calculator[/bold magenta] with settings:
+        area_raio_threshold value: [bold magenta]{cls.config.area_raio_threshold}[/bold magenta]
+        eccentricity_threshold value: [bold magenta]{cls.config.eccentricity_threshold}[/bold magenta]
+        p_threshold value: [bold magenta]{cls.config.p_threshold}[/bold magenta]""",
             verbose=verbose,
         )
+    
+        # Get the version of VisualSpreadsheet from summary files
+        # summary_files = list(data_directory.glob("*summary.csv"))
+        # if summary_files:
+        #     print(f"Version: {get_visualspreadsheet_version(summary_files[0])}")
 
         # update service settings if set for saving
         if service_settings:
             service_settings.update({cls.__name__: subset_settings(cls.config.model_dump(), cls.__name__)})
 
         return [
-            bcal_function(lc_data=lc_data, data_directory=data_directory)
+            bcal_function(lc_data=lc_data, data_directory=data_directory, config=cls.config)
             for lc_data in data
         ], service_settings
 
-
-def bcal_function(lc_data: LabelCheckerData, data_directory) -> LabelCheckerData:
-
+def bcal_function(lc_data: LabelCheckerData, data_directory, config: Config) -> LabelCheckerData:
     CollageFile_name = lc_data.get_value("CollageFile")
     calibration_const = lc_data.get_value("CalConst")
 
@@ -69,6 +74,16 @@ def bcal_function(lc_data: LabelCheckerData, data_directory) -> LabelCheckerData
 
         image = get_nparray_from_png(ImageFile_path)
 
-    _, lc_data.BiovolumeHSosik, lc_data.SurfaceAreaHSosik = biovolume(image, calibration_const)
+    _, lc_data.BiovolumeMS, lc_data.SurfaceAreaMS = biovolume(image, area_raio_threshold = config.area_raio_threshold, eccentricity_threshold = config.eccentricity_threshold, p_threshold = config.p_threshold, calibration_const=calibration_const, debug = False)
 
     return lc_data
+
+def get_visualspreadsheet_version(filename):
+    import re
+    with open(filename, 'r', encoding='utf-8') as file:
+        for line in file:
+            if 'Software' in line:
+                software_string = line.split(',')[1].strip()
+                match = re.search(r'VisualSpreadsheet(\d+)', software_string)
+                return match.group(1) if match else None
+    return None

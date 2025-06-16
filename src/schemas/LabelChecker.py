@@ -110,8 +110,8 @@ class LabelCheckerData:
         self.Symmetry: float | None = get_series_value(series, "Symmetry")
         self.Transparency: float | None = get_series_value(series, "Transparency")
         self.Width: float | None = get_series_value(series, "Width")
-        self.BiovolumeHSosik: float | None = get_series_value(series, "BiovolumeHSosik")
-        self.SurfaceAreaHSosik: float | None = get_series_value(series, "SurfaceAreaHSosik")
+        self.BiovolumeMS: float | None = get_series_value(series, "BiovolumeMS")
+        self.SurfaceAreaMS: float | None = get_series_value(series, "SurfaceAreaMS")
         self.Preprocessing: str | None = get_series_value(
             series, "Preprocessing", "object"
         )
