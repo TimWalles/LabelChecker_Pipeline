@@ -159,6 +159,7 @@ def check_image_file(data: pd.DataFrame, sample_name: str) -> pd.DataFrame:
         lambda df: _assign_filename(
             row=df,
             sample_name=sample_name,
+            n_rows=data.shape[0],
         ),
         axis=1,
     )
@@ -168,11 +169,12 @@ def check_image_file(data: pd.DataFrame, sample_name: str) -> pd.DataFrame:
 def _assign_filename(
     row: pd.Series,
     sample_name: str,
+    n_rows: int,
 ) -> pd.Series:
     return pd.Series(
         [
             (
-                f"{sample_name}_{str(row['Id']-1).zfill(5)}.png"
+                f"{sample_name}_{str(row['Id']-1).zfill(len(str(n_rows)) + 1)}.png"  # <=9999 n_rows -> 5; digits <=99999 -> 6 digits; ...
                 if pd.isnull(row["ImageFilename"]) and pd.isnull(row["CollageFile"])
                 else (row["ImageFilename"] if not pd.isnull(row["ImageFilename"]) else None)
             )
