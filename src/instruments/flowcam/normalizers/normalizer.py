@@ -174,7 +174,7 @@ def _assign_filename(
     return pd.Series(
         [
             (
-                f"{sample_name}_{str(row['Id']-1).zfill(len(str(n_rows)) + 1)}.png"  # <=9999 n_rows -> 5; digits <=99999 -> 6 digits; ...
+                f"{sample_name}_{str(row['Id']-1).zfill(5 if len(str(n_rows)) < 5 else len(str(n_rows)))}.png"  # default 5, if n_rows is larger than 99999, it will use the length of n_rows
                 if pd.isnull(row["ImageFilename"]) and pd.isnull(row["CollageFile"])
                 else (row["ImageFilename"] if not pd.isnull(row["ImageFilename"]) else None)
             )
