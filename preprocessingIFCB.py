@@ -83,6 +83,7 @@ def process_files(input_folder_path, output_folder_path):
                 LC_df.loc[i, 'ImageW'] = adc_line[15]
                 LC_df.loc[i, 'ImageH'] = adc_line[16]
                 LC_df.loc[i, 'Uuid'] = uuid.uuid4().hex.upper()
+                LC_df.loc[i, 'Preprocessing'] = 'object'
                 
                 # Extract and save image
                 roi_x = int(adc_line[15])  # ROI width
