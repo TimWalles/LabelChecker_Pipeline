@@ -38,8 +38,7 @@ class SizeThreshold:
             message=f"""Running [bold magenta]size threshold[/bold magenta] with settings:
         threshold variable: [bold magenta]{cls.config.size_threshold_threshold_variable}[/bold magenta]
         lower threshold value: [bold magenta]{cls.config.size_threshold_lower_bound}[/bold magenta] set to [bold magenta]{LabelChecker.Preprocessing.SMALL.value}[/bold magenta]
-        upper threshold value: [bold magenta]{cls.config.size_threshold_upper_bound}[/bold magenta] set to [bold magenta]{LabelChecker.Preprocessing.LARGE.value}[/bold magenta]
-                """,
+        upper threshold value: [bold magenta]{cls.config.size_threshold_upper_bound}[/bold magenta] set to [bold magenta]{LabelChecker.Preprocessing.LARGE.value}[/bold magenta]""",
             verbose=verbose,
         )
 

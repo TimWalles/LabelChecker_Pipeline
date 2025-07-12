@@ -19,3 +19,5 @@ examples/01_train_model_with_lc_data/train_model_ks.ipynb
 !**/models/air_bubble/1/config.json
 *.lock
 /model
+DatasetConverter.py
+src/services/config.py

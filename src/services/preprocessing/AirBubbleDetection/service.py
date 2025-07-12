@@ -40,10 +40,7 @@ class AirBubbleDetection(ModelLoader):
         verbose: bool,
         service_settings: ServiceSettings | None,
     ) -> Tuple[list[LabelCheckerData], ServiceSettings | None]:
-        log_info(
-            message="Running [bold magenta]air bubble detection[/bold magenta]",
-            verbose=verbose,
-        )
+        
         if not self.config.air_bubble_detection_active:
             log_info(
                 message=f"[bold magenta]air bubble detection[/bold magenta] switched [bold red]off[/bold red].",
@@ -52,6 +49,12 @@ class AirBubbleDetection(ModelLoader):
             if service_settings:
                 service_settings.remove(self.__class__.__name__)
             return data, service_settings
+        
+        log_info(
+            message="Running [bold magenta]air bubble detection[/bold magenta]",
+            verbose=verbose,
+        )
+
         if not self.service_initialized:
             log_info(
                 message=f"Initializing [bold magenta]air bubble detection[/bold magenta] model...",

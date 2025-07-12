@@ -1,4 +1,8 @@
 import os
+
+# This supresses the warning message about the tensorflow
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+
 from pathlib import Path
 
 import pandas as pd
@@ -14,6 +18,11 @@ from src.logging import log_error, log_info, log_progress
 from src.services.ProcessData import DataPreprocessor
 from src.utils.dataframe import order_df_columns
 
+# This supresses the warning message about the pandas cast
+import warnings
+warnings.filterwarnings('ignore', 
+                       message='invalid value encountered in cast',
+                       category=RuntimeWarning)
 
 def main(
     data_dir: Annotated[
