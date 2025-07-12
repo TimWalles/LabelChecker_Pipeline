@@ -27,11 +27,9 @@ def read_flowcam_data(
     tracker: Tracker,
 ) -> Tuple[pd.DataFrame, Tracker]:
 
-    data = pd.read_csv(file_path, engine="pyarrow")
+    data = pd.read_csv(file_path, engine="pyarrow", encoding="latin1")
     if data.empty:
-        tracker = error_handler(
-            tracker=tracker, name=file_path.name, desc="Failed to load data."
-        )
+        tracker = error_handler(tracker=tracker, name=file_path.name, desc="Failed to load data.")
     else:
         reprocess = file_path.name.startswith("LabelChecker_")
         data = normalize_flowcam_data(
