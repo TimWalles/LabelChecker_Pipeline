@@ -29,12 +29,32 @@ def normalize_flowcam_data(
 
 # region normalize column names
 def normalize_column_names(name: str) -> str:
+    # Remove the last occurrence of parentheses if there are two or more
+    if name.count("(") >= 2 and name.count(")") >= 2:
+        # Remove the last parenthesis group
+        name = re.sub(r"\s*\([^()]*\)\s*$", "", name)
+    else:
+        # Remove only generic units
+        for unit in ["(mm)", "(px)", "(s)", "(hu)"]:
+            name = name.replace(unit, "")
+
+    # Remove units in parentheses if they contain superscripts or Greek characters
+    name = re.sub(
+        r"\s*\(([^)]*)\)",
+        lambda m: "" if contains_superscript_or_greek(m.group(1)) else m.group(0),
+        name,
+    )
     # name = name.replace("/", "")
-    name = re.sub(r"[\{}()/.]", "", name)
+    name = re.sub(r"[\{}()/.]", " ", name)
     if " " in name or name.isupper():
         name = camel_case(name)
     name = normalize_column_name(name)
     return name
+
+
+# Remove units in parentheses if they contain superscripts or Greek characters
+def contains_superscript_or_greek(s):
+    return bool(re.search(r"[²³¹⁰⁴⁵⁶⁷⁸⁹μµ]", s))
 
 
 def camel_case(s):
