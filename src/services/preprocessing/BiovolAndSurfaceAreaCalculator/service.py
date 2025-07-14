@@ -77,9 +77,29 @@ def bcal_function(lc_data: LabelCheckerData, data_directory, config: Config) -> 
         
         ImageFile_path = os.path.join(data_directory, Sample_name, ImageFilename)
 
+        if not os.path.exists(ImageFile_path):
+            Sample_name = f"{lc_data.get_value("Name")} Images"
+            ImageFile_path = os.path.join(data_directory, Sample_name, ImageFilename)
+        
+        if not os.path.exists(ImageFile_path):
+            log_error(
+                message=f"Image file {ImageFile_path} does not exist for {lc_data.get_value('Name')}. Skipping biovolume and surface area calculation.",
+            )
+            lc_data.BiovolumeMS = None
+            lc_data.SurfaceAreaMS = None
+            return lc_data
+
         image = get_nparray_from_png(ImageFile_path)
 
-    _, lc_data.BiovolumeMS, lc_data.SurfaceAreaMS = biovolume(image, area_raio_threshold = config.area_raio_threshold, eccentricity_threshold = config.eccentricity_threshold, p_threshold = config.p_threshold, calibration_const=calibration_const, debug = False)
+    try:
+        _, lc_data.BiovolumeMS, lc_data.SurfaceAreaMS = biovolume(image, area_raio_threshold = config.area_raio_threshold, eccentricity_threshold = config.eccentricity_threshold, p_threshold = config.p_threshold, calibration_const=calibration_const, debug = False)
+    
+    except Exception as e:
+        log_error(
+            message=f"Error calculating biovolume and surface area for {lc_data.get_value('Name')}: {e}",
+        )
+        lc_data.BiovolumeMS = None
+        lc_data.SurfaceAreaMS = None
 
     return lc_data
 
