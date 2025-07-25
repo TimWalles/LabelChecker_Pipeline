@@ -53,11 +53,10 @@ def get_image(
 def build_image_path(data: LabelCheckerData, directory: Path) -> LabelCheckerData:
     if data.ImageFilename and data.Name:
         data.ImageFilename = Path.joinpath(directory, data.Name, data.ImageFilename).as_posix()
-        print(data.ImageFilename)
         if not Path(data.ImageFilename).exists():
             # if not exists, check parent directory with " Images" suffix
-            data.ImageFilename = Path.joinpath(directory, data.Name + " Images", data.ImageFilename).as_posix()
-            print(data.ImageFilename)
+            # Fix: Only use the filename for the last part, not the full previous path
+            data.ImageFilename = Path.joinpath(directory, data.Name + " Images", Path(data.ImageFilename).name).as_posix()
             if not Path(data.ImageFilename).exists():
                 raise FileNotFoundError(f"Image file not found: {data.ImageFilename}")
     elif data.CollageFile:
