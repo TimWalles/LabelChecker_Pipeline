@@ -1,4 +1,5 @@
 from pathlib import Path
+
 import cv2
 from numpy.typing import NDArray
 
@@ -10,11 +11,7 @@ def read_image(
     image_path: str,
     grayscale: bool = True,
 ) -> cv2.typing.MatLike | None:
-    return (
-        cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
-        if grayscale
-        else cv2.imread(image_path, cv2.IMREAD_COLOR)
-    )
+    return cv2.imread(image_path, cv2.IMREAD_GRAYSCALE) if grayscale else cv2.imread(image_path, cv2.IMREAD_COLOR)
 
 
 def crop_image(
@@ -55,11 +52,12 @@ def get_image(
 
 def build_image_path(data: LabelCheckerData, directory: Path) -> LabelCheckerData:
     if data.ImageFilename and data.Name:
-        data.ImageFilename = Path.joinpath(
-            directory, data.Name, data.ImageFilename
-        ).as_posix()
+        data.ImageFilename = Path.joinpath(directory, data.Name, data.ImageFilename).as_posix()
         if not Path(data.ImageFilename).exists():
-            raise FileNotFoundError(f"Image file not found: {data.ImageFilename}")
+            # if not exists, check parent directory with " Images" suffix
+            data.ImageFilename = Path.joinpath(directory, data.Name + " Images", data.ImageFilename).as_posix()
+            if not Path(data.ImageFilename).exists():
+                raise FileNotFoundError(f"Image file not found: {data.ImageFilename}")
     elif data.CollageFile:
         data.CollageFile = Path.joinpath(directory, data.CollageFile).as_posix()
         if not Path(data.CollageFile).exists():
