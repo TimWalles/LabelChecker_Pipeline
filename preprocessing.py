@@ -1,8 +1,10 @@
 import os
 
 # This supresses the warning message about the tensorflow
-os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
 
+# This supresses the warning message about the pandas cast
+import warnings
 from pathlib import Path
 
 import pandas as pd
@@ -11,18 +13,15 @@ from rich.progress import track
 from typing_extensions import Annotated
 
 from src.enums.Instruments import Instruments
-from src.error.handler import Tracker
+from src.error.handler import Tracker, error_handler
 from src.instruments.list_data import fetch_data_files
 from src.instruments.read_data import read_data
 from src.logging import log_error, log_info, log_progress
 from src.services.ProcessData import DataPreprocessor
 from src.utils.dataframe import order_df_columns
 
-# This supresses the warning message about the pandas cast
-import warnings
-warnings.filterwarnings('ignore', 
-                       message='invalid value encountered in cast',
-                       category=RuntimeWarning)
+warnings.filterwarnings("ignore", message="invalid value encountered in cast", category=RuntimeWarning)
+
 
 def main(
     data_dir: Annotated[
@@ -98,33 +97,57 @@ def main(
         log_progress(message=f"processing sample [bold magenta]{file_path.name}[/bold magenta]")
 
         # region read data
-        data, tracker = read_data(
-            file_path=file_path,
-            instrument=instrument,
-            tracker=tracker,
-        )
-        if not data:
+        try:
+            data, tracker = read_data(
+                file_path=file_path,
+                instrument=instrument,
+                tracker=tracker,
+            )
+            if not data:
+                continue
+        except Exception as e:
+            tracker = error_handler(
+                tracker=tracker,
+                name=file_path.name,
+                desc=str(e),
+            )
             continue
+
         # endregion
 
         # region preprocess data
-        data = data_preprocessor.process_label_checker_data(
-            data=data,
-            data_directory=file_path.parent,
-            verbose=verbose,
-            save_settings=save_settings,
-        )
+        try:
+            data = data_preprocessor.process_label_checker_data(
+                data=data,
+                data_directory=file_path.parent,
+                verbose=verbose,
+                save_settings=save_settings,
+            )
+        except Exception as e:
+            tracker = error_handler(
+                tracker=tracker,
+                name=file_path.name,
+                desc=str(e),
+            )
 
         # region write data
-        data_df = pd.DataFrame.from_records([lc_data.to_dict() for lc_data in data])
-        data_df = order_df_columns(df=data_df)
-        data_df.to_csv(
-            os.path.join(
-                file_path.parent.as_posix(),
-                "LabelChecker_" + file_path.parent.name + ".csv",
-            ),
-            index=False,
-        )
+        try:
+            data_df = pd.DataFrame.from_records([lc_data.to_dict() for lc_data in data])
+            data_df = order_df_columns(df=data_df)
+            data_df.to_csv(
+                os.path.join(
+                    file_path.parent.as_posix(),
+                    "LabelChecker_" + file_path.parent.name + ".csv",
+                ),
+                index=False,
+            )
+        except Exception as e:
+            tracker = error_handler(
+                tracker=tracker,
+                name=file_path.name,
+                desc=str(e),
+            )
+            continue
         # endregion
     # endregion
 

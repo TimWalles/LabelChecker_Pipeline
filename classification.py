@@ -7,12 +7,12 @@ from rich.progress import track
 from typing_extensions import Annotated
 
 from src.enums.Instruments import Instruments
-from src.error.handler import Tracker
+from src.error.handler import Tracker, error_handler
 from src.instruments.list_data import fetch_data_files
 from src.instruments.read_data import read_data
-from src.utils.dataframe import order_df_columns
 from src.logging import log_error, log_info, log_progress
 from src.services.ProcessData import DataClassifier
+from src.utils.dataframe import order_df_columns
 
 
 def main(
@@ -47,15 +47,11 @@ def main(
     ] = True,
     reprocess: Annotated[
         bool,
-        typer.Option(
-            "--reprocess", "-R", help="set to reprocess already processed data"
-        ),
+        typer.Option("--reprocess", "-R", help="set to reprocess already processed data"),
     ] = False,
     verbose: Annotated[bool, typer.Option("--verbose", "-V")] = False,
 ):
-    log_progress(
-        message=f"Starting [bold magenta]{instrument}[/bold magenta] data-Classification pipeline"
-    )
+    log_progress(message=f"Starting [bold magenta]{instrument}[/bold magenta] data-Classification pipeline")
     # region informing user about the services
     if reprocess and verbose:
         log_info(
@@ -89,58 +85,75 @@ def main(
     # region processing data
     tracker = Tracker()
     data_classifier = DataClassifier()
-    for file_path in track(
-        sample_files.values(), description="[bold green][Progress update][/bold green]"
-    ):
-        log_progress(
-            message=f"processing sample [bold magenta]{file_path.name}[/bold magenta]"
-        )
+    for file_path in track(sample_files.values(), description="[bold green][Progress update][/bold green]"):
+        log_progress(message=f"processing sample [bold magenta]{file_path.name}[/bold magenta]")
 
         # region read data
-        data, tracker = read_data(
-            file_path=file_path,
-            instrument=instrument,
-            running_classification=True,
-            tracker=tracker,
-        )
+        try:
+            data, tracker = read_data(
+                file_path=file_path,
+                instrument=instrument,
+                running_classification=True,
+                tracker=tracker,
+            )
+        except Exception as e:
+            tracker = error_handler(
+                tracker=tracker,
+                name=file_path.name,
+                desc=str(e),
+            )
+            continue
         if not data:
             continue
         # endregion
 
         # region classification services
-        data = data_classifier.classify_label_checker_data(
-            data=data,
-            data_directory=file_path.parent,
-            verbose=verbose,
-            save_settings=save_settings,
-        )
-        # endregion
+        try:
+            data = data_classifier.classify_label_checker_data(
+                data=data,
+                data_directory=file_path.parent,
+                verbose=verbose,
+                save_settings=save_settings,
+            )
+        except Exception as e:
+            tracker = error_handler(
+                tracker=tracker,
+                name=file_path.name,
+                desc=str(e),
+            )
+            continue
+            # endregion
 
         # region write data
-        data_df = pd.DataFrame.from_records([lc_data.to_dict() for lc_data in data])
-        data_df = order_df_columns(df=data_df)
-        data_df.to_csv(
-            os.path.join(
-                file_path.parent.as_posix(),
-                "LabelChecker_" + file_path.parent.name + ".csv",
-            ),
-            index=False,
-        )
+        try:
+            data_df = pd.DataFrame.from_records([lc_data.to_dict() for lc_data in data])
+            data_df = order_df_columns(df=data_df)
+            data_df.to_csv(
+                os.path.join(
+                    file_path.parent.as_posix(),
+                    "LabelChecker_" + file_path.parent.name + ".csv",
+                ),
+                index=False,
+            )
+        except Exception as e:
+            tracker = error_handler(
+                tracker=tracker,
+                name=file_path.name,
+                desc=str(e),
+            )
+            continue
         # endregion
     # endregion
 
     # region reporting results
-    log_progress(
-        message=f"processed [bold magenta]{tracker.successful}[/bold magenta] nr. of samples successful"
-    )
+    log_progress(message=f"processed [bold magenta]{tracker.successful}[/bold magenta] nr. of samples successful")
 
     if tracker.failed:
+        log_error(message=f"failed processing [bold magenta]{len(tracker.failed)}[/bold magenta] nr. of samples")
         log_error(
-            message=f"failed processing [bold magenta]{tracker.failed}[/bold magenta] nr. of samples"
+            message=f"Failed samples: {', '.join([f.name for f in tracker.failed])}",
         )
-    log_progress(
-        message=f"Finished [bold magenta]{instrument}[/bold magenta] data-Classification pipeline. Exiting the script."
-    )
+    log_progress(message=f"Finished [bold magenta]{instrument}[/bold magenta] data-Classification pipeline. Exiting the script.")
     # endregion
 
 
