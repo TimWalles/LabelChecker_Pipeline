@@ -54,7 +54,7 @@ class BiovolAndSurfaceAreaCalculator:
 def bcal_function(lc_data: LabelCheckerData, data_directory, config: Config) -> LabelCheckerData:
 
     preprocessing = lc_data.get_value("Preprocessing")
-    if preprocessing != 'object':
+    if preprocessing == 'small':
         return lc_data
 
     CollageFile_name = lc_data.get_value("CollageFile")
