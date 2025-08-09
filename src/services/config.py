@@ -43,14 +43,16 @@ class PreprocessingConfig(BaseModel):
     air_bubble_detection_active: bool = False
 
     # Biovolume and surface area calculator
-    biovol_and_surface_area_calculator_active: bool = True
+    biovol_and_surface_area_calculator_active: bool = False
     area_raio_threshold: float = 1.2
-    eccentricity_threshold: float = 0.5 
+    eccentricity_threshold: float = 0.5
     p_threshold: float = 0.8
+
 
 class ClassificationConfig(BaseModel):
     # Object classification
     object_classification_active: bool = False
+
 
 class Config:
     preprocessing: PreprocessingConfig = PreprocessingConfig()
