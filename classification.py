@@ -97,6 +97,7 @@ def main(
                 tracker=tracker,
             )
         except Exception as e:
+            log_error(message=f"Failed to read data from {file_path.name}: {str(e)}")
             tracker = error_handler(
                 tracker=tracker,
                 name=file_path.name,
@@ -116,6 +117,7 @@ def main(
                 save_settings=save_settings,
             )
         except Exception as e:
+            log_error(message=f"Failed to classify data from {file_path.name}: {str(e)}. Continuing to the next file")
             tracker = error_handler(
                 tracker=tracker,
                 name=file_path.name,
@@ -136,6 +138,7 @@ def main(
                 index=False,
             )
         except Exception as e:
+            log_error(message=f"Failed to write data to {"LabelChecker_" + file_path.parent.name + ".csv"}: {str(e)}. Continuing to the next file")
             tracker = error_handler(
                 tracker=tracker,
                 name=file_path.name,

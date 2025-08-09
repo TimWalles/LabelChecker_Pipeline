@@ -106,6 +106,7 @@ def main(
             if not data:
                 continue
         except Exception as e:
+            log_error(message=f"Failed to read data from {file_path.name}. Continuing to the next file: {str(e)}")
             tracker = error_handler(
                 tracker=tracker,
                 name=file_path.name,
@@ -124,6 +125,7 @@ def main(
                 save_settings=save_settings,
             )
         except Exception as e:
+            log_error(message=f"Failed to preprocess data from {file_path.name}. Continuing to the next file: {str(e)}")
             tracker = error_handler(
                 tracker=tracker,
                 name=file_path.name,
@@ -142,6 +144,7 @@ def main(
                 index=False,
             )
         except Exception as e:
+            log_error(message=f"Failed to write data to {'LabelChecker_' + file_path.parent.name + '.csv. Continuing to the next file'}: {str(e)}")
             tracker = error_handler(
                 tracker=tracker,
                 name=file_path.name,
